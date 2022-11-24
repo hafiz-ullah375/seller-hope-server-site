@@ -20,32 +20,18 @@ async function run() {
         app.get('/categories', async (req, res) => {
             // const number = 3;
             const query = {};
-            const cursor = categoryCollection.find(query);
-            const services = await cursor.toArray();
-            res.send({
-                status: true,
-                message: "success",
-                data: services
-            })
-        })
-        app.get('/itemByCategory', async (req, res) => {
-            // const number = 3;
+            const result = await categoryCollection.find(query).toArray();
 
-            let query = {};
-            console.log(req.query._id);
-            if (req.query._id) {
-                query = {
-                    _id: req.query._id
-                }
-            }
-            const cursor = itemCollection.find(query);
-            const services = await cursor.toArray();
-            res.send({
-                status: true,
-                message: "success",
-                data: services
-            })
+            res.send(result)
         })
+        app.get('/itemByCategory/:brand', async (req, res) => {
+            const brand = req.params.brand;
+            const query = { brand: brand };
+            // const query = {}
+            const result = await itemCollection.find(query).toArray();
+            res.send(result)
+        })
+
 
 
     }
