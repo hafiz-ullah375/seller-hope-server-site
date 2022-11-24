@@ -16,10 +16,29 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         const categoryCollection = client.db("sellerHope").collection("productCategories");
+        const itemCollection = client.db("sellerHope").collection("productItem");
         app.get('/categories', async (req, res) => {
             // const number = 3;
             const query = {};
             const cursor = categoryCollection.find(query);
+            const services = await cursor.toArray();
+            res.send({
+                status: true,
+                message: "success",
+                data: services
+            })
+        })
+        app.get('/itemByCategory', async (req, res) => {
+            // const number = 3;
+
+            let query = {};
+            console.log(req.query._id);
+            if (req.query._id) {
+                query = {
+                    _id: req.query._id
+                }
+            }
+            const cursor = itemCollection.find(query);
             const services = await cursor.toArray();
             res.send({
                 status: true,
