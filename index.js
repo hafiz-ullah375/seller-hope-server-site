@@ -21,7 +21,7 @@ async function run() {
 
 
         app.get('/categories', async (req, res) => {
-            // const number = 3;
+
             const query = {};
             const result = await categoryCollection.find(query).toArray();
 
@@ -35,17 +35,24 @@ async function run() {
             res.send(result)
         })
 
-        app.post('/storeUsers', async (req, res) => {
-            const user = req.body;
-            const result = await userCollection.insertOne(user);
-            res.send(result)
-        })
+
         app.post('/addProduct', async (req, res) => {
             const product = req.body;
             const result = await itemCollection.insertOne(product);
             res.send(result)
         })
+        app.get('/products', async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email };
+            const result = await itemCollection.find(query).toArray();
 
+            res.send(result)
+        })
+        app.post('/storeUsers', async (req, res) => {
+            const user = req.body;
+            const result = await userCollection.insertOne(user);
+            res.send(result)
+        })
     }
     finally {
 
