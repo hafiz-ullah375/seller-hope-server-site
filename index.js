@@ -18,6 +18,8 @@ async function run() {
         const categoryCollection = client.db("sellerHope").collection("productCategories");
         const itemCollection = client.db("sellerHope").collection("productItem");
         const userCollection = client.db("sellerHope").collection("users");
+
+
         app.get('/categories', async (req, res) => {
             // const number = 3;
             const query = {};
@@ -36,6 +38,11 @@ async function run() {
         app.post('/storeUsers', async (req, res) => {
             const user = req.body;
             const result = await userCollection.insertOne(user);
+            res.send(result)
+        })
+        app.post('/addProduct', async (req, res) => {
+            const product = req.body;
+            const result = await itemCollection.insertOne(product);
             res.send(result)
         })
 
