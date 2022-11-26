@@ -42,17 +42,40 @@ async function run() {
             res.send(result)
         })
         app.get('/products', async (req, res) => {
-            const email = req.query.email;
-            const query = { email: email };
+            // console.log(email);
+            let query = {};
+            if (req.query.email) {
+                query = {
+                    email: req.query.email
+                }
+            }
             const result = await itemCollection.find(query).toArray();
-
             res.send(result)
         })
+
         app.post('/storeUsers', async (req, res) => {
             const user = req.body;
             const result = await userCollection.insertOne(user);
             res.send(result)
         })
+        app.get('/user/admin/:email', async (req, res) => {
+
+            const email = req.params.email;
+
+            let query = { email };
+
+            console.log(query);
+            // if (req.query.role) {
+            //     query = {
+            //         role: req.query.role
+            //     }
+            // }
+            const result = await userCollection.findOne(query);
+            // const user = result.map((hafiz) => hafiz)
+            // console.log(user);
+            res.send({ admin: result?.role === 'seller' })
+        })
+
     }
     finally {
 
