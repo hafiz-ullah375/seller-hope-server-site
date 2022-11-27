@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
-const { ObjectID } = require('bson');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+
 require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 4000;
@@ -58,23 +58,31 @@ async function run() {
             const result = await userCollection.insertOne(user);
             res.send(result)
         })
+        app.get('/allUser', async (req, res) => {
+            const query = {}
+            const result = await userCollection.find(query).toArray();
+
+            res.send(result)
+
+        })
         app.get('/user/admin/:email', async (req, res) => {
 
             const email = req.params.email;
-
             let query = { email };
-
             console.log(query);
-            // if (req.query.role) {
-            //     query = {
-            //         role: req.query.role
-            //     }
-            // }
             const result = await userCollection.findOne(query);
-            // const user = result.map((hafiz) => hafiz)
-            // console.log(user);
-            res.send({ admin: result?.role === 'seller' })
+            res.send({ admin: result?.role === 'admin' })
         })
+        app.delete('/user/delete/:id', async (req, res) => {
+
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const result = await userCollection.deleteOne(query)
+            res.send(result)
+            console.log(result);
+        })
+
+
 
     }
     finally {
