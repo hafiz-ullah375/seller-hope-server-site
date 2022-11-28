@@ -16,6 +16,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         const categoryCollection = client.db("sellerHope").collection("productCategories");
+        const ExtraCategoryCollection = client.db("sellerHope").collection("extraCategories");
         const itemCollection = client.db("sellerHope").collection("productItem");
         const userCollection = client.db("sellerHope").collection("users");
 
@@ -34,7 +35,13 @@ async function run() {
             const result = await itemCollection.find(query).toArray();
             res.send(result)
         })
+        app.get('/extra/categories', async (req, res) => {
 
+            const query = {};
+            const result = await ExtraCategoryCollection.find(query).toArray();
+
+            res.send(result)
+        })
 
         app.post('/addProduct', async (req, res) => {
             const product = req.body;
@@ -63,6 +70,24 @@ async function run() {
             const result = await userCollection.find(query).toArray();
 
             res.send(result)
+
+        })
+        app.get('/user/seller/:email', async (req, res) => {
+
+            const email = req.params.email;
+            const query = { email }
+            console.log(query);
+            const user = await userCollection.findOne(query)
+            res.send({ seller: user.role === 'seller' })
+
+        })
+        app.get('/user/buyer/:email', async (req, res) => {
+
+            const email = req.params.email;
+            const query = { email }
+            console.log(query);
+            const user = await userCollection.findOne(query)
+            res.send({ buyer: user.role === 'buyer' })
 
         })
         app.get('/user/admin/:email', async (req, res) => {
